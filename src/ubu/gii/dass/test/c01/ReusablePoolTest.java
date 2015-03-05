@@ -96,5 +96,15 @@ public class ReusablePoolTest {
 		pool.releaseReusable(reusable3);
 	}
 	
+	@Test (expected = DuplicatedInstanceException.class)
+	public void testReleaseReusableDuplicatedException() throws NotFreeInstanceException,DuplicatedInstanceException{
+		ReusablePool pool = ReusablePool.getInstance();
+		Reusable reusable1;
+		
+		reusable1 = pool.acquireReusable();
+		pool.releaseReusable(reusable1);
+		pool.releaseReusable(reusable1);
+		
+	}
 
 }
