@@ -3,6 +3,7 @@
  */
 package ubu.gii.dass.test.c01;
 
+
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -11,9 +12,12 @@ import org.junit.Test;
 
 import ubu.gii.dass.c01.ReusablePool;
 import ubu.gii.dass.c01.NotFreeInstanceException;
+import ubu.gii.dass.c01.Reusable;
+import ubu.gii.dass.c01.DuplicatedInstanceException;
 
 /**
- * @author Álvaro Ruiz Molledo
+ * @author ï¿½lvaro Ruiz Molledo
+ * @author Victor Perez Esteban
  *
  */
 public class ReusablePoolTest {
@@ -43,15 +47,25 @@ public class ReusablePoolTest {
 		assertNotNull("El objeto pool es null.", pool1);
 		
 		ReusablePool pool2 = ReusablePool.getInstance();
-		assertEquals("El patrón Singleton está mal implementado.", pool1, pool2);
+		assertEquals("El patrï¿½n Singleton estï¿½ mal implementado.", pool1, pool2);
 	}
 
 	@Test(expected = NotFreeInstanceException.class)
-	public void testAcquireReusableException() throws NotFreeInstanceException{
+	public void testAcquireReusableException() throws NotFreeInstanceException,DuplicatedInstanceException{
 		ReusablePool pool = ReusablePool.getInstance();
-		pool.acquireReusable();
-		pool.acquireReusable();
-		pool.acquireReusable();
+		Reusable reusable1 = pool.acquireReusable();
+		Reusable reusable2 = pool.acquireReusable();
+		//Reusable reusable3 = pool.acquireReusable();
+		
+		try{
+			pool.acquireReusable();
+			//pool.acquireReusable();
+			//pool.acquireReusable();
+		}finally{
+			pool.releaseReusable(reusable1);
+			pool.releaseReusable(reusable2);
+			//pool.releaseReusable(reusable3);
+		}
 	}
 	
 	/**
@@ -66,7 +80,7 @@ public class ReusablePoolTest {
 	 * Test method for {@link ubu.gii.dass.c01.ReusablePool#releaseReusable(ubu.gii.dass.c01.Reusable)}.
 	 */
 	@Test
-	public void testReleaseReusable() throws NotFreeInstanceException{
+	public void testReleaseReusable() throws NotFreeInstanceException,DuplicatedInstanceException{
 		fail("Not yet implemented");
 	}
 
