@@ -14,6 +14,7 @@ import ubu.gii.dass.c01.ReusablePool;
 import ubu.gii.dass.c01.NotFreeInstanceException;
 import ubu.gii.dass.c01.Reusable;
 import ubu.gii.dass.c01.DuplicatedInstanceException;
+import ubu.gii.dass.c01.Client;
 
 /**
  * @author �lvaro Ruiz Molledo
@@ -22,13 +23,24 @@ import ubu.gii.dass.c01.DuplicatedInstanceException;
  */
 public class ReusablePoolTest {
 
-	ReusablePool pool = null;
+	private ReusablePool pool = null;
+	private Reusable reusable1 = null;
+	private Reusable reusable2 = null;
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		/*
+		pool = ReusablePool.getInstance();
+		
+		reusable1 = pool.acquireReusable();
+		reusable2 = pool.acquireReusable();
+		
+		pool.releaseReusable(reusable1);
+		pool.releaseReusable(reusable2);
+		*/
 	}
 
 	/**
@@ -52,9 +64,10 @@ public class ReusablePoolTest {
 
 	@Test(expected = NotFreeInstanceException.class)
 	public void testAcquireReusableException() throws NotFreeInstanceException,DuplicatedInstanceException{
-		ReusablePool pool = ReusablePool.getInstance();
-		Reusable reusable1 = pool.acquireReusable();
-		Reusable reusable2 = pool.acquireReusable();
+		pool = ReusablePool.getInstance();
+		
+		reusable1 = pool.acquireReusable();
+		reusable2 = pool.acquireReusable();
 		//Reusable reusable3 = pool.acquireReusable();
 		
 		try{
@@ -73,9 +86,9 @@ public class ReusablePoolTest {
 	 */
 	@Test
 	public void testAcquireReusable() throws NotFreeInstanceException,DuplicatedInstanceException {
-		ReusablePool pool = ReusablePool.getInstance();
+		pool = ReusablePool.getInstance();
 		
-		Reusable reusable1 = pool.acquireReusable();
+		reusable1 = pool.acquireReusable();
 		
 		assertNotNull(reusable1);
 		
@@ -87,10 +100,10 @@ public class ReusablePoolTest {
 	 */
 	@Test
 	public void testReleaseReusable() throws NotFreeInstanceException,DuplicatedInstanceException{
-		ReusablePool pool = ReusablePool.getInstance();
+		pool = ReusablePool.getInstance();
 		
-		Reusable reusable1 = pool.acquireReusable();
-		Reusable reusable2 = pool.acquireReusable();
+		reusable1 = pool.acquireReusable();
+		reusable2 = pool.acquireReusable();
 		
 		pool.releaseReusable(reusable2);
 		
@@ -104,8 +117,7 @@ public class ReusablePoolTest {
 	
 	@Test (expected = DuplicatedInstanceException.class)
 	public void testReleaseReusableDuplicatedException() throws NotFreeInstanceException,DuplicatedInstanceException{
-		ReusablePool pool = ReusablePool.getInstance();
-		Reusable reusable1;
+		pool = ReusablePool.getInstance();
 		
 		reusable1 = pool.acquireReusable();
 		pool.releaseReusable(reusable1);
@@ -125,5 +137,26 @@ public class ReusablePoolTest {
 		assertEquals(reusable1.util(), reusable1.hashCode() + "  :Uso del objeto Reutilizable" );
 		
 		pool.releaseReusable(reusable1);
+	}
+	
+	/**
+	 * Test method for {@link ubu.gii.dass.c01.Client#main()}.
+	 */
+	@Test
+	public void testClient() throws NotFreeInstanceException,DuplicatedInstanceException {
+		ReusablePool pool = ReusablePool.getInstance();
+		
+		reusable1 = pool.acquireReusable();
+		reusable2 = pool.acquireReusable();
+		pool.releaseReusable(reusable1);
+		pool.releaseReusable(reusable2);
+		
+		Client cliente = new Client();
+		
+		cliente.main(new String[2]);
+		
+		pool.releaseReusable(reusable1);
+		pool.releaseReusable(reusable2);
+	
 	}
 }
