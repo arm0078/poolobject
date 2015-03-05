@@ -72,8 +72,14 @@ public class ReusablePoolTest {
 	 * Test method for {@link ubu.gii.dass.c01.ReusablePool#acquireReusable()}.
 	 */
 	@Test
-	public void testAcquireReusable() {
-		fail("Not yet implemented");
+	public void testAcquireReusable() throws NotFreeInstanceException,DuplicatedInstanceException {
+		ReusablePool pool = ReusablePool.getInstance();
+		
+		Reusable reusable1 = pool.acquireReusable();
+		
+		assertNotNull(reusable1);
+		
+		pool.releaseReusable(reusable1);
 	}
 
 	/**
@@ -107,4 +113,17 @@ public class ReusablePoolTest {
 		
 	}
 
+	/**
+	 * Test method for {@link ubu.gii.dass.c01.Reusable#util()}.
+	 */
+	@Test
+	public void testReusableUtil() throws NotFreeInstanceException,DuplicatedInstanceException {
+		ReusablePool pool = ReusablePool.getInstance();
+		
+		Reusable reusable1 = pool.acquireReusable();
+		
+		assertEquals(reusable1.util(), reusable1.hashCode() + "  :Uso del objeto Reutilizable" );
+		
+		pool.releaseReusable(reusable1);
+	}
 }
