@@ -81,7 +81,20 @@ public class ReusablePoolTest {
 	 */
 	@Test
 	public void testReleaseReusable() throws NotFreeInstanceException,DuplicatedInstanceException{
-		fail("Not yet implemented");
+		ReusablePool pool = ReusablePool.getInstance();
+		
+		Reusable reusable1 = pool.acquireReusable();
+		Reusable reusable2 = pool.acquireReusable();
+		
+		pool.releaseReusable(reusable2);
+		
+		Reusable reusable3 = pool.acquireReusable();
+		
+		assertEquals(reusable2, reusable3);
+		
+		pool.releaseReusable(reusable1);
+		pool.releaseReusable(reusable3);
 	}
+	
 
 }
