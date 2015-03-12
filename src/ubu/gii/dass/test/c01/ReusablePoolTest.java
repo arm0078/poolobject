@@ -51,6 +51,10 @@ public class ReusablePoolTest {
 	}
 
 	/**
+	 * Comprueba que al pedir ina instancia del pool
+	 * devuelve un objeto no nulo, y que al volver a 
+	 * pedir otra instancia devuelve el mismo objeto
+	 * 
 	 * Test method for {@link ubu.gii.dass.c01.ReusablePool#getInstance()}.
 	 */
 	@Test
@@ -59,9 +63,17 @@ public class ReusablePoolTest {
 		assertNotNull("El objeto pool es null.", pool1);
 		
 		ReusablePool pool2 = ReusablePool.getInstance();
-		assertEquals("El patr�n Singleton est� mal implementado.", pool1, pool2);
+		assertEquals("El patrogleton esta mal implementado.", pool1, pool2);
 	}
-
+	
+	/**
+	 * Prueba que cuando se supera el máximo número de
+	 * peticiones de reusables al pool, lanza la excepción
+	 * NotFreeInstanceException
+	 * 
+	 * @throws NotFreeInstanceException
+	 * @throws DuplicatedInstanceException
+	 */
 	@Test(expected = NotFreeInstanceException.class)
 	public void testAcquireReusableException() throws NotFreeInstanceException,DuplicatedInstanceException{
 		pool = ReusablePool.getInstance();
@@ -82,6 +94,9 @@ public class ReusablePoolTest {
 	}
 	
 	/**
+	 * Prueba que al pedir un resusable cuando hay resusables
+	 * disponibles, el pool devuelve un objeto no nulo
+	 * 
 	 * Test method for {@link ubu.gii.dass.c01.ReusablePool#acquireReusable()}.
 	 */
 	@Test
@@ -96,6 +111,9 @@ public class ReusablePoolTest {
 	}
 
 	/**
+	 * Comprueba que la liberar un reusable al pool y volver
+	 * a pedir otro reusable, devuelve el mismo objeto
+	 * 
 	 * Test method for {@link ubu.gii.dass.c01.ReusablePool#releaseReusable(ubu.gii.dass.c01.Reusable)}.
 	 */
 	@Test
@@ -115,6 +133,14 @@ public class ReusablePoolTest {
 		pool.releaseReusable(reusable3);
 	}
 	
+	/**
+	 * Prueba que cuando se intenta liberar al pool
+	 * dos veces el mismo objeto, lanza la excepción
+	 * DuplicatedInstanceException
+	 * 
+	 * @throws NotFreeInstanceException
+	 * @throws DuplicatedInstanceException
+	 */
 	@Test (expected = DuplicatedInstanceException.class)
 	public void testReleaseReusableDuplicatedException() throws NotFreeInstanceException,DuplicatedInstanceException{
 		pool = ReusablePool.getInstance();
@@ -124,8 +150,32 @@ public class ReusablePoolTest {
 		pool.releaseReusable(reusable1);
 		
 	}
+	
+	/**
+	 * Prueba que no se pueda añadir un reusable nulo
+	 * al pool
+	 * 
+	 * @throws NotFreeInstanceException
+	 * @throws DuplicatedInstanceException
+	 */
+	@Test 
+	public void testReleaseReusableNoNulo() throws NotFreeInstanceException,DuplicatedInstanceException{
+		pool = ReusablePool.getInstance();
+		Reusable reusable_test1 = null;
+		//Reusable reusable_test2 = new Reusable();
+		
+		pool.releaseReusable(reusable_test1);
+		//pool.releaseReusable(reusable_test2);
+		
+		assertNotNull (pool.acquireReusable());
+		assertNotNull (pool.acquireReusable());
+	}
 
 	/**
+	 * Prueba que al usar la función de hash de un reusable
+	 * devuelve el código hash del objeto más el mensaje
+	 * "  :Uso del objeto Reutilizable"
+	 * 
 	 * Test method for {@link ubu.gii.dass.c01.Reusable#util()}.
 	 */
 	@Test
@@ -142,6 +192,7 @@ public class ReusablePoolTest {
 	/**
 	 * Test method for {@link ubu.gii.dass.c01.Client#main()}.
 	 */
+	/*
 	@Test
 	public void testClient() throws NotFreeInstanceException,DuplicatedInstanceException {
 		ReusablePool pool = ReusablePool.getInstance();
@@ -159,4 +210,5 @@ public class ReusablePoolTest {
 		pool.releaseReusable(reusable2);
 	
 	}
+	*/
 }
